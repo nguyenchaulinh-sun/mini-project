@@ -1,3 +1,4 @@
+
 package com.example.employee_management.service;
 
 import com.example.employee_management.dto.EmployeeRequest;
@@ -45,5 +46,9 @@ public class EmployeeService {
                                 "Employee not found: " + id
                         )
                 );
+    }
+
+    public List<Employee> getEmployeesByDepartment(String department) {
+        return employeeRepository.findByDepartment(department);
     }
 }

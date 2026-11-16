@@ -6,6 +6,8 @@ import com.example.employee_management.entity.Employee;
 import com.example.employee_management.service.EmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,25 +28,56 @@ public class EmployeeController {
         this.appInfoComponent = appInfoComponent;
     }
 
+    // POST: Add a new employee
     @PostMapping
-    public Employee createEmployee(@RequestBody EmployeeRequest request) {
-        return employeeService.createEmployee(request);
+    public ResponseEntity<Employee> createEmployee(
+            @RequestBody EmployeeRequest request
+    ) {
+        Employee employee = employeeService.createEmployee(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employee);
     }
 
+    // GET: Get all employees
     @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
+    // GET: Get employee by ID
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable String id) {
-        return employeeService.getEmployeeById(id);
+    public ResponseEntity<?> getEmployeeById(
+            @PathVariable String id
+    ) {
+        try {
+            Employee employee = employeeService.getEmployeeById(id);
+            return ResponseEntity.ok(employee);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(exception.getMessage());
+        }
     }
 
+    // GET: Search employees by department
+    @GetMapping("/search")
+    public ResponseEntity<List<Employee>> searchEmployees(
+            @RequestParam String department
+    ) {
+        return ResponseEntity.ok(
+                employeeService.getEmployeesByDepartment(department)
+        );
+    }
+
+    // GET: Application information
     @GetMapping("/info")
-    public String getApplicationInfo() {
-        return appInfoComponent.getApplicationName()
+    public ResponseEntity<String> getApplicationInfo() {
+        String info = appInfoComponent.getApplicationName()
                 + " - "
                 + appInfoComponent.getModule();
+
+        return ResponseEntity.ok(info);
     }
 }

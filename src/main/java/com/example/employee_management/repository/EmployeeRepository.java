@@ -26,4 +26,11 @@ public class EmployeeRepository {
                 .filter(employee -> employee.getId().equals(id))
                 .findFirst();
     }
+
+    public List<Employee> findByDepartment(String department) {
+        return employees.stream()
+                .filter(employee -> employee.getDepartment() != null
+                        && employee.getDepartment().equalsIgnoreCase(department))
+                .toList();
+    }
 }
