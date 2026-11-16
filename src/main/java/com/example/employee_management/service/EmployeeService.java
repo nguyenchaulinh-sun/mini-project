@@ -4,10 +4,10 @@ package com.example.employee_management.service;
 import com.example.employee_management.dto.EmployeeRequest;
 import com.example.employee_management.entity.Department;
 import com.example.employee_management.entity.Employee;
+import com.example.employee_management.exception.EmployeeNotFoundException;
 import com.example.employee_management.repository.DepartmentRepository;
 import com.example.employee_management.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -48,11 +48,9 @@ public class EmployeeService {
     // Get employee by ID
     public Employee getEmployeeById(String id) {
         return employeeRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Employee not found: " + id
-                        )
-                );
+                .orElseThrow(() -> new EmployeeNotFoundException(
+                        "Employee not found with ID: " + id
+                ));
     }
 
     // Update employee

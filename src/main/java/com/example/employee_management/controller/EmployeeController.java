@@ -4,7 +4,7 @@ import com.example.employee_management.component.AppInfoComponent;
 import com.example.employee_management.dto.EmployeeRequest;
 import com.example.employee_management.entity.Employee;
 import com.example.employee_management.service.EmployeeService;
-
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +29,8 @@ public class EmployeeController {
     // POST: Create employee
     @PostMapping
     public ResponseEntity<Employee> createEmployee(
-            @RequestBody EmployeeRequest request
-    ) {
+            @Valid @RequestBody EmployeeRequest request) {
+
         Employee employee = employeeService.createEmployee(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
@@ -43,21 +43,16 @@ public class EmployeeController {
 
     // GET: Get employee by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeeById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(employeeService.getEmployeeById(id));
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(exception.getMessage());
-        }
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     // PUT: Update employee
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEmployee(
             @PathVariable String id,
-            @RequestBody EmployeeRequest request
-    ) {
+            @Valid @RequestBody EmployeeRequest request) {
+
         try {
             Employee employee = employeeService.updateEmployee(id, request);
             return ResponseEntity.ok(employee);
