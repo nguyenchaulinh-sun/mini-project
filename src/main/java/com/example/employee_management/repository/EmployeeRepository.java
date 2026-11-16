@@ -1,36 +1,15 @@
 package com.example.employee_management.repository;
 
 import com.example.employee_management.entity.Employee;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@Repository
-public class EmployeeRepository {
+public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-    private final List<Employee> employees = new ArrayList<>();
+    // Search employees by name
+    List<Employee> findByNameContainingIgnoreCase(String name);
 
-    public Employee save(Employee employee) {
-        employees.add(employee);
-        return employee;
-    }
-
-    public List<Employee> findAll() {
-        return new ArrayList<>(employees);
-    }
-
-    public Optional<Employee> findById(String id) {
-        return employees.stream()
-                .filter(employee -> employee.getId().equals(id))
-                .findFirst();
-    }
-
-    public List<Employee> findByDepartment(String department) {
-        return employees.stream()
-                .filter(employee -> employee.getDepartment() != null
-                        && employee.getDepartment().equalsIgnoreCase(department))
-                .toList();
-    }
+    // Search employees by department name
+    List<Employee> findByDepartment_NameIgnoreCase(String departmentName);
 }

@@ -1,18 +1,19 @@
+
 package com.example.employee_management.dto;
 
 public class EmployeeRequest {
 
     private String name;
     private String email;
-    private String department;
+    private Long departmentId;
 
     public EmployeeRequest() {
     }
 
-    public EmployeeRequest(String name, String email, String department) {
+    public EmployeeRequest(String name, String email, Long departmentId) {
         this.name = name;
         this.email = email;
-        this.department = department;
+        this.departmentId = departmentId;
     }
 
     public String getName() {
@@ -31,11 +32,11 @@ public class EmployeeRequest {
         this.email = email;
     }
 
-    public String getDepartment() {
-        return department;
+    public Long getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 }

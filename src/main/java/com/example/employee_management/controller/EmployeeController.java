@@ -5,7 +5,6 @@ import com.example.employee_management.dto.EmployeeRequest;
 import com.example.employee_management.entity.Employee;
 import com.example.employee_management.service.EmployeeService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final AppInfoComponent appInfoComponent;
 
-    @Autowired
     public EmployeeController(
             EmployeeService employeeService,
             AppInfoComponent appInfoComponent
@@ -28,16 +26,13 @@ public class EmployeeController {
         this.appInfoComponent = appInfoComponent;
     }
 
-    // POST: Add a new employee
+    // POST: Create employee
     @PostMapping
     public ResponseEntity<Employee> createEmployee(
             @RequestBody EmployeeRequest request
     ) {
         Employee employee = employeeService.createEmployee(request);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
 
     // GET: Get all employees
@@ -48,27 +43,62 @@ public class EmployeeController {
 
     // GET: Get employee by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeeById(
-            @PathVariable String id
-    ) {
+    public ResponseEntity<?> getEmployeeById(@PathVariable String id) {
         try {
-            Employee employee = employeeService.getEmployeeById(id);
-            return ResponseEntity.ok(employee);
+            return ResponseEntity.ok(employeeService.getEmployeeById(id));
         } catch (IllegalArgumentException exception) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(exception.getMessage());
         }
     }
 
-    // GET: Search employees by department
-    @GetMapping("/search")
-    public ResponseEntity<List<Employee>> searchEmployees(
-            @RequestParam String department
+    // PUT: Update employee
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateEmployee(
+            @PathVariable String id,
+            @RequestBody EmployeeRequest request
     ) {
-        return ResponseEntity.ok(
-                employeeService.getEmployeesByDepartment(department)
-        );
+        try {
+            Employee employee = employeeService.updateEmployee(id, request);
+            return ResponseEntity.ok(employee);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(exception.getMessage());
+        }
+    }
+
+    // DELETE: Delete employee
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable String id) {
+        try {
+            employeeService.deleteEmployee(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(exception.getMessage());
+        }
+    }
+
+    // GET: Search employees by name or department
+    @GetMapping("/search")
+    public ResponseEntity<?> searchEmployees(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String department
+    ) {
+        if (name != null && !name.isBlank()) {
+            return ResponseEntity.ok(
+                    employeeService.searchEmployeesByName(name)
+            );
+        }
+
+        if (department != null && !department.isBlank()) {
+            return ResponseEntity.ok(
+                    employeeService.getEmployeesByDepartment(department)
+            );
+        }
+
+        return ResponseEntity.badRequest()
+                .body("Please provide name or department parameter");
     }
 
     // GET: Application information
