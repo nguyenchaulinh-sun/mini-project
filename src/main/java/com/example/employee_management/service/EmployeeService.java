@@ -8,11 +8,14 @@ import com.example.employee_management.exception.EmployeeNotFoundException;
 import com.example.employee_management.repository.DepartmentRepository;
 import com.example.employee_management.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
 public class EmployeeService {
-
+    private static final Logger logger =
+        LoggerFactory.getLogger(EmployeeService.class);
     private final UtilityService utilityService;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
@@ -28,6 +31,8 @@ public class EmployeeService {
 
     // Create employee
     public Employee createEmployee(EmployeeRequest request) {
+        logger.info("Creating employee with name: {}", request.getName());
+
         Department department = getDepartment(request.getDepartmentId());
 
         Employee employee = new Employee();
@@ -36,7 +41,11 @@ public class EmployeeService {
         employee.setEmail(request.getEmail());
         employee.setDepartment(department);
 
-        return employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        logger.info("Employee created successfully with ID: {}", savedEmployee.getId());
+
+        return savedEmployee;
     }
 
     // Get all employees
@@ -60,13 +69,20 @@ public class EmployeeService {
         employee.setEmail(request.getEmail());
         employee.setDepartment(department);
 
-        return employeeRepository.save(employee);
+        logger.info("Updating employee with ID: {}", id);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+        logger.info("Employee updated successfully with ID: {}", updatedEmployee.getId());
+        return updatedEmployee;
     }
 
     // Delete employee
     public void deleteEmployee(String id) {
-        Employee employee = getEmployeeById(id);
-        employeeRepository.delete(employee);
+        logger.info("Deleting employee with ID: {}", id);
+
+        employeeRepository.delete(getEmployeeById(id));
+
+        logger.info("Employee deleted successfully with ID: {}", id);
     }
 
     // Search employee by name
