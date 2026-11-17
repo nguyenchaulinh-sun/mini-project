@@ -1,16 +1,25 @@
 package com.example.employee_management.service;
 
+import com.example.employee_management.entity.Employee;
+import com.example.employee_management.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UtilityService {
 
-    private final AtomicLong counter = new AtomicLong(0);
+    private final EmployeeRepository employeeRepository;
+
+    public UtilityService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     public String generateEmployeeCode() {
-        return String.format("EMP%04d", counter.incrementAndGet());
+        long nextNumber = employeeRepository.findTopByOrderByIdDesc()
+                .map(Employee::getId)
+                .map(id -> Long.parseLong(id.substring(3)))
+                .orElse(0L) + 1;
+
+        return String.format("EMP%04d", nextNumber);
     }
 
     public String formatName(String name) {

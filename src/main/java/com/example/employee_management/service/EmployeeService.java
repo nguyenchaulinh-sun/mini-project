@@ -20,8 +20,7 @@ public class EmployeeService {
     public EmployeeService(
             UtilityService utilityService,
             EmployeeRepository employeeRepository,
-            DepartmentRepository departmentRepository
-    ) {
+            DepartmentRepository departmentRepository) {
         this.utilityService = utilityService;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
@@ -49,8 +48,7 @@ public class EmployeeService {
     public Employee getEmployeeById(String id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(
-                        "Employee not found with ID: " + id
-                ));
+                        "Employee not found with ID: " + id));
     }
 
     // Update employee
@@ -84,10 +82,38 @@ public class EmployeeService {
     // Find department by ID
     private Department getDepartment(Long departmentId) {
         return departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Department not found: " + departmentId
-                        )
-                );
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Department not found: " + departmentId));
+    }
+
+    // Search employees by name and department ID
+    public List<Employee> searchEmployees(String name, Long departmentId) {
+
+        List<Employee> employees;
+
+        if (name != null && !name.isBlank()
+                && departmentId != null) {
+
+            employees = employeeRepository.findByNameContainingIgnoreCase(name)
+                    .stream()
+                    .filter(employee -> employee.getDepartment() != null
+                            && employee.getDepartment().getId().equals(departmentId))
+                    .toList();
+
+        } else if (name != null && !name.isBlank()) {
+
+            employees = searchEmployeesByName(name);
+
+        } else if (departmentId != null) {
+
+            Department department = getDepartment(departmentId);
+            employees = getEmployeesByDepartment(department.getName());
+
+        } else {
+
+            employees = getAllEmployees();
+        }
+
+        return employees;
     }
 }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="page-container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">E</div>
+            <div>
+                <h2>EmployeeHub</h2>
+                <p>Employee Management System</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a class="btn btn-secondary" th:href="@{/employees/search}">
+                Search Employees
+            </a>
+            <a class="btn btn-primary" th:href="@{/employees/add}">
+                + Add Employee
+            </a>
+        </div>
+    </header>
+
+    <section class="page-heading">
+        <h1>Employee Overview</h1>
+        <p>Manage and view all employees in your organization.</p>
+    </section>
+
+    <div th:if="${successMessage}"
+         class="alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <span>Total Employees</span>
+            <h3 th:text="${#lists.size(employees)}">0</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>Management</span>
+            <h3>Human Resources</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>System Status</span>
+            <h3 style="color: #249653;">Active</h3>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="section-title">Employee Directory</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Department</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="employee : ${employees}">
+                    <td class="employee-id" th:text="${employee.id}"></td>
+                    <td class="employee-name" th:text="${employee.name}"></td>
+                    <td th:text="${employee.email}"></td>
+                    <td>
+                        <span class="department-badge"
+                              th:text="${employee.department.name}">
+                        </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(employees)}">
+                    <td colspan="4" class="empty-state">
+                        No employees found. Add your first employee!
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>
