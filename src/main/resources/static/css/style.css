@@ -309,3 +309,70 @@ tbody tr:hover {
         padding: 17px;
     }
 }
+/* Module 9 - Authentication */
+
+.topbar .actions form {
+    margin: 0;
+}
+
+.topbar .actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.alert-error {
+    background-color: #fde8e8;
+    color: #b42318;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+}
+
+.alert-success {
+    background-color: #e8f7ed;
+    color: #18794e;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+}
+
+
+/* Module 9 - Authentication and authorization */
+
+.topbar .actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.topbar .actions form,
+.table-wrapper td form {
+    margin: 0;
+}
+
+.alert-error {
+    background-color: #fde8e8;
+    color: #b42318;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 8px;
+    border: 1px solid #f5c2c2;
+}
+
+.alert-success {
+    background-color: #e8f7ee;
+    color: #167443;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 8px;
+    border: 1px solid #b7e4c7;
+}
+
+.table-wrapper td .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}

@@ -1,5 +1,8 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,13 +23,38 @@
         </div>
 
         <div class="actions">
-            <a class="btn btn-secondary" th:href="@{/employees/list}">
+            <span>
+                Welcome,
+                <strong sec:authentication="name">username</strong>
+            </span>
+
+            <span class="department-badge"
+                  sec:authorize="hasRole('ADMIN')">
+                ADMIN
+            </span>
+
+            <span class="department-badge"
+                  sec:authorize="hasRole('USER')">
+                USER
+            </span>
+
+            <a class="btn btn-secondary"
+               th:href="@{/employees/list}">
                 ← Employee List
             </a>
 
-            <a class="btn btn-primary" th:href="@{/employees/add}">
+            <!-- Only ADMIN can add employees -->
+            <a class="btn btn-primary"
+               th:href="@{/employees/add}"
+               sec:authorize="hasRole('ADMIN')">
                 + Add Employee
             </a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-secondary">
+                    Logout
+                </button>
+            </form>
         </div>
     </header>
 
@@ -95,9 +123,14 @@
 
                 <tbody>
                 <tr th:each="employee : ${employees}">
-                    <td class="employee-id" th:text="${employee.id}"></td>
-                    <td class="employee-name" th:text="${employee.name}"></td>
+                    <td class="employee-id"
+                        th:text="${employee.id}"></td>
+
+                    <td class="employee-name"
+                        th:text="${employee.name}"></td>
+
                     <td th:text="${employee.email}"></td>
+
                     <td>
                         <span class="department-badge"
                               th:text="${employee.department.name}">
