@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Statistics</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">E</div>
+            <div>
+                <h2>EmployeeHub</h2>
+                <p>Employee Management System</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <span>
+                Welcome,
+                <strong sec:authentication="name">username</strong>
+            </span>
+
+            <a class="btn btn-secondary"
+               th:href="@{/employees/list}">
+                Employee List
+            </a>
+
+            <a class="btn btn-secondary"
+               th:href="@{/employees/search}">
+                Search
+            </a>
+
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-secondary" type="submit">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <section class="page-heading">
+        <h1>Reporting & Analytics</h1>
+        <p>Employee statistics and department reports.</p>
+    </section>
+
+    <!-- Total employees -->
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <span>Total Employees</span>
+            <h3 th:text="${totalEmployees}">0</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>Total Departments</span>
+            <h3 th:text="${#lists.size(departmentStatistics)}">0</h3>
+        </div>
+
+        <div class="stat-card">
+            <span>System Status</span>
+            <h3 style="color: #249653;">Active</h3>
+        </div>
+
+    </section>
+
+    <!-- Employees by department -->
+    <section class="card">
+
+        <h2 class="section-title">
+            Employees by Department
+        </h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Employee Count</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="stat : ${departmentStatistics}">
+                    <td th:text="${stat.departmentName}"></td>
+                    <td th:text="${stat.employeeCount}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(departmentStatistics)}">
+                    <td colspan="2" class="empty-state">
+                        No statistics available.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div>
+
+</body>
+</html>

@@ -53,11 +53,17 @@ public class SecurityConfig {
                 // Public authentication APIs
                 .requestMatchers("/api/auth/**").permitAll()
 
+                // USER and ADMIN can access statistics APIs
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/employees/statistics/**"
+                ).hasAnyRole("USER", "ADMIN")
+
                 // USER and ADMIN can view employee list
                 .requestMatchers(HttpMethod.GET, "/api/employees")
                     .hasAnyRole("USER", "ADMIN")
 
-                // Admin only for employee API operations
+                // Admin only for remaining employee API operations
                 .requestMatchers("/api/employees/**")
                     .hasRole("ADMIN")
 
@@ -99,8 +105,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/employees/list")
                     .hasAnyRole("USER", "ADMIN")
 
-                // Search is also read-only
+                // Search is read-only
                 .requestMatchers(HttpMethod.GET, "/employees/search")
+                    .hasAnyRole("USER", "ADMIN")
+
+                // Statistics: USER and ADMIN can access
+                .requestMatchers("/employees/statistics", "/employees/statistics/**")
                     .hasAnyRole("USER", "ADMIN")
 
                 // All remaining employee management pages are ADMIN-only
