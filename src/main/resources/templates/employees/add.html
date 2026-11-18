@@ -1,5 +1,8 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,15 +22,39 @@
             </div>
         </div>
 
-        <a class="btn btn-secondary" th:href="@{/employees/list}">
-            ← Back to Employees
-        </a>
+        <div class="actions">
+            <span>
+                Welcome,
+                <strong sec:authentication="name">username</strong>
+            </span>
+
+            <span class="department-badge"
+                  sec:authorize="hasRole('ADMIN')">
+                ADMIN
+            </span>
+
+            <a class="btn btn-secondary"
+               th:href="@{/employees/list}">
+                ← Back to Employees
+            </a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-secondary">
+                    Logout
+                </button>
+            </form>
+        </div>
     </header>
 
     <section class="page-heading">
         <h1>Add New Employee</h1>
         <p>Enter employee information to add a new member to your organization.</p>
     </section>
+
+    <div th:if="${errorMessage}"
+         class="alert-error"
+         th:text="${errorMessage}">
+    </div>
 
     <section class="card form-card">
 
